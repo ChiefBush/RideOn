@@ -126,3 +126,74 @@ This endpoint registers a new captain. It accepts a JSON request body containing
     "token": "eyJhbGciOiJIUzI1NiIsInR...",
 }
 ```
+
+## `/captains/login` Endpoint
+
+### Description
+This endpoint logs in an existing captain. It accepts a JSON request body containing the captain's email and password. On successful login, it returns an authentication token along with captain details.
+
+### HTTP Method
+**POST**
+
+### Request Body
+- **email**: String (Required, must be a valid email address)
+- **password**: String (Required, minimum 6 characters)
+
+### Example Response
+```json
+{
+    "email": "jane.doe@example.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR...",
+}
+```
+
+## `/captains/profile` Endpoint
+
+### Description
+This endpoint retrieves the profile of the authenticated captain. It requires a valid authentication token to be sent in the request headers.
+
+### HTTP Method
+**GET**
+
+### Request Headers
+- **Authorization**: Bearer token (Required)
+
+### Example Response
+```json
+{
+    "fullname": {
+        "firstname": "Jane",
+        "lastname": "Doe"
+    },
+    "email": "jane.doe@example.com",
+    "vehicle": {
+        "color": "Red",
+        "plate": "XYZ123",
+        "capacity": 4,
+        "vehicleType": "car"
+    },
+    "status": "active",
+    "location": {
+        "lat": 12.9715987,
+        "lng": 77.5945627
+    }
+}
+```
+
+## `/captains/logout` Endpoint
+
+### Description
+This endpoint logs out the authenticated captain. It requires a valid authentication token to be sent in the request headers or cookies. On successful logout, it clears the authentication token and adds it to the blacklist.
+
+### HTTP Method
+**GET**
+
+### Request Headers
+- **Authorization**: Bearer token (Required, if not sent in cookies)
+
+### Example Response
+```json
+{
+    "message": "Logged out successfully"
+}
+```
