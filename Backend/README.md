@@ -88,3 +88,41 @@ This endpoint logs out the authenticated user. It requires a valid authenticatio
     "message": "Logged Out"
 }
 ```
+
+## `/captains/register` Endpoint
+
+### Description
+This endpoint registers a new captain. It accepts a JSON request body containing the captain's full name, email, password, and vehicle details. On successful registration, it returns an authentication token along with captain details.
+
+### HTTP Method
+**POST**
+
+### Request Body
+- **fullname**: Object  
+  - **firstname**: String (Required, minimum 3 characters)  
+  - **lastname**: String (Optional, minimum 3 characters if provided)
+- **email**: String (Required, must be a valid email address)
+- **password**: String (Required, minimum 6 characters)
+- **vehicle**: Object
+  - **color**: String (Required, minimum 3 characters)
+  - **plate**: String (Required, minimum 3 characters)
+  - **capacity**: Number (Required, minimum 1)
+  - **vehicleType**: String (Required, must be one of 'car', 'motorcycle', 'auto')
+
+### Example Response
+```json
+{
+    "fullname": {
+        "firstname": "Jane",
+        "lastname": "Doe"
+    },
+    "email": "jane.doe@example.com",
+    "vehicle": {
+        "color": "Red",
+        "plate": "XYZ123",
+        "capacity": 4,
+        "vehicleType": "car"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR...",
+}
+```
