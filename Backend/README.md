@@ -1,5 +1,7 @@
 # Backend API Documentation
 
+# `USER ROUTES`
+
 ## `/users/register` Endpoint
 
 ### Description
@@ -88,6 +90,8 @@ This endpoint logs out the authenticated user. It requires a valid authenticatio
     "message": "Logged Out"
 }
 ```
+
+# `CAPTAINS ROUTES`
 
 ## `/captains/register` Endpoint
 
