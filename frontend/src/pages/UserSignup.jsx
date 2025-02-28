@@ -1,6 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import axios from 'axios'
+import {UserDataContext} from '../context/UserContext'
 
 const UserSignup = () => {
         const [firstName, setfirstName] = useState('')
@@ -8,17 +10,38 @@ const UserSignup = () => {
         const [email, setemail] = useState('')
         const [password, setpassword] = useState('')
         const [userData, setuserData] = useState({})
+
+        const navigate = useNavigate()
+
+        const {user, setuser}=React.useContext(UserDataContext) 
     
-        const submitHandler =(e)=>{
-            e.preventDefault();
-            setuserData({
-                fullName:{
-                    firstName: firstName,
-                    lastName: lastName
+        const submitHandler = async (e)=>{
+            e.preventDefault()
+            const newUser={
+                fullname:{
+                    firstname: firstName, 
+                    lastname: lastName 
                 },
                 email: email,
                 password: password
-            })
+            }
+
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser);
+
+                if (response.status === 201) {
+                    const data = response.data;
+                    setuser(data.user);
+                    localStorage.setItem('token', data.token);
+                    navigate('/home');
+                }
+            } catch (error) {
+                console.error("Error during user registration:", error.response ? error.response.data : error.message);
+                if (error.response && error.response.data && error.response.data.errors) {
+                    error.response.data.errors.forEach(err => console.error(err.message));
+                }
+            }
+
             setfirstName('')
             setlastName('')
             setemail('')
@@ -79,7 +102,7 @@ const UserSignup = () => {
             <button 
             className='bg-[#111] text-white font-semibold mt-2 mb-2 rounded px-4 py-2 w-full text-lg relative transition duration-300 ease-in-out transform hover:bg-gray-800 hover:scale-102'
             >
-                Login
+                Create Account
             </button>
 
             <p className='text-center'>Already Have an account? <Link to='/login' className='text-blue-600 relative transition duration-300 ease-in-out transform hover:text-blue-800 hover:scale-102'>Login Here</Link></p>
