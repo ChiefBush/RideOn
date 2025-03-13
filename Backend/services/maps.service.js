@@ -26,7 +26,7 @@ module.exports.getDistanceTime = async (origin, destination) => {
         throw new Error('Origin and destination are required');
     }
 
-    const apiKey = process.env.GOOGLE_MAPS_API;
+    const apiKey = process.env.GOOGLE_DISTANCE_API;
 
     const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&key=${apiKey}`;
 
