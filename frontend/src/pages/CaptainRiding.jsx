@@ -1,14 +1,18 @@
 import React, { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import FinishRide from '../components/FinishRide';
+import LiveTracking from '../components/LiveTracking';
 
 const CaptainRiding = () => {
 
     const [finishRidePanel, setfinishRidePanel] = useState(false)
 
     const finishRidePanelRef = useRef(null)
+
+    const location = useLocation()
+    const rideData = location.state?.ride
 
     useGSAP(function(){
         if(finishRidePanel){
@@ -31,8 +35,9 @@ const CaptainRiding = () => {
             <i className=" text-lg font-bold ri-logout-box-r-line"></i>
         </Link>
         </div>
-        <div className="h-4/5 ">
-            <img className="h-full w-full object-cover" src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" />
+        <div className=" w-full h-4/5 ">
+            {/* <img className="h-full w-full object-cover" src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" /> */}
+            <LiveTracking/>
 
         </div>
         <div className='h-1/5 p-6 flex items-center justify-between relative bg-yellow-100'
@@ -47,7 +52,7 @@ const CaptainRiding = () => {
             <button className='mt-1 bg-green-600 text-white font-semibold p-3 px-10 rounded-lg transition duration-300 ease-in-out transform hover:bg-green-800 '>Complete Ride</button>
         </div>
         <div ref={finishRidePanelRef} className='fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-10 pt-14'>
-            <FinishRide setfinishRidePanel={setfinishRidePanel} />
+            <FinishRide ride={rideData} setfinishRidePanel={setfinishRidePanel} />
         </div>
     </div>
   )

@@ -1,13 +1,33 @@
 import React from 'react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const ConfirmRidePopUp = (props) => {
 
     const [Otp, setOtp] = useState('')
+    const navigate = useNavigate()
 
-    const submitHandler=(e)=>{
+    const submitHandler= async(e)=>{
         e.preventDefault()
+
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+            params: {
+                rideId: props.ride._id,
+                otp: Otp
+            },
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }   
+        })
+
+        if (response.status === 200) {
+            props.setConfirmridePopupPanel(false)
+            props.setridePopupPanel(false)
+            navigate('/captain-riding', { state: { ride: props.ride } })
+        }
+
     }
 
   return (
@@ -19,7 +39,7 @@ const ConfirmRidePopUp = (props) => {
         <div className='flex items-center justify-between p-3 bg-yellow-100 rounded-lg mt-4'>
             <div className='flex items-center gap-3'>
                 <img className='h-15 w-15 rounded-full object-cover' src="https://i.redd.it/mibglviklubb1.jpg" alt="" />
-                <h2 className='text-xl font-medium'>Ariza Patel</h2>
+                <h2 className='text-xl font-medium capitalize'>{props.ride?.user.fullname.firstname}</h2>
             </div>
             <h5 className='text-lg font-semibold'>0 Km</h5>
         </div>
@@ -28,34 +48,32 @@ const ConfirmRidePopUp = (props) => {
                 <div className='flex iems-center gap-5 p-3 border-b-2 border-gray-200'>
                     <i className="text-xl mt-2 ri-map-pin-2-fill"></i>
                     <div>
-                        <h3 className='text-lg font-medium'>562/11-A</h3>
-                        <p className='text-sm -mt-1 text-gray-600'>Jasola Vihar, New Delhi, Delhi</p>
+                        <h3 className='text-lg font-medium'>Pickup</h3>
+                        <p className='text-sm -mt-1 text-gray-600'>{props.ride?.pickup}</p>
                     </div>
 
                 </div>
                 <div className='flex iems-center gap-5 p-3 border-b-2 border-gray-200'>
                     <i className="text-xl mt-2 ri-map-pin-user-fill"></i> 
                     <div>
-                        <h3 className='text-lg font-medium'>Amity University, Gate Number 2</h3>
-                        <p className='text-sm -mt-1 text-gray-600'>Sector 125, Noida, Uttar Pradesh</p>
+                        <h3 className='text-lg font-medium'>Destination</h3>
+                        <p className='text-sm -mt-1 text-gray-600'>{props.ride?.destination}</p>
                     </div>
 
                 </div>
                 <div className='flex iems-center gap-5 p-3'>
                     <i className="text-xl mt-2 ri-cash-fill"></i>
                     <div>
-                        <h3 className='text-lg font-medium'>₹ 193.20</h3>
+                        <h3 className='text-lg font-medium'>₹ {props.ride?.fare}</h3>
                         <p className='text-sm -mt-1 text-gray-600'>Cash Cash</p>
                     </div>
                 </div>
             </div>
             <div className='mt-6 w-full'>
-                <form onSubmit={(e)=>{
-                    submitHandler(e)
-                }}>
+                <form onSubmit={submitHandler}>
                     <input value={Otp} onChange={(e)=>setOtp(e.target.value)} type="text" className='bg-[#eee] px-6 py-4 font-mono text-lg rounded-lg w-full mt-5' placeholder='Enter OTP' />
-                    <Link to='/captain-riding' className='w-full text-lg mt-5 flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg transition duration-300 ease-in-out transform hover:bg-green-800 '>Confirm
-                    </Link>
+                    <button className='w-full text-lg mt-5 flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg transition duration-300 ease-in-out transform hover:bg-green-800 '>Confirm
+                    </button>
                     <button onClick={()=>{
                         props.setConfirmridePopupPanel(false)
                         props.setridePopupPanel(false)
